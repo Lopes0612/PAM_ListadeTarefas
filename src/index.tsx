@@ -1,33 +1,47 @@
 import React from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity,ScrollView, FlatList} from "react-native";
+import {
+    StyleSheet, 
+    Text, 
+    TextInput, 
+    View, 
+    TouchableOpacity, 
+    ScrollView,
+    FlatList
+} from "react-native";
 
-interface Tarefa{
-    id: String;
-    title: String;
+interface Tarefa {
+    id: string;
+    title: string;
 }
 
 export const Home = () => {
 
-    {/*Colchete usa para array*/}
+    {/*[] - array*/}
     const [newTask, setNewTask] = React.useState('');
-    const [tarefas, setTarefas] = React.useState<Tarefa[]>([]);
+    const [tarefas, setTarefas] = React.useState<Tarefa[]>([]);      
 
-    const adcTarefa = () => {
-        const dados = {
-            id: String(new Date().getTime()),
-            title: newTask ? newTask : 'Registro Vazio',
+        const adcTarefa = () => {
+            const dados = {
+                    id: String(new Date().getTime()),
+                    title: newTask ? newTask : 'Registro vazio',
+                };
+                setTarefas([...tarefas, dados]);
+                setNewTask('');
+            };
+
+        const removerTarefa = (id: string) => {
+            const tarefasAtualizadas = tarefas.filter((tarefa) => tarefa.id !== id);
+            setTarefas(tarefasAtualizadas);
         };
-        setTarefas([...tarefas, dados]);
-    };
+        
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tarefas do dia</Text>
-            <TextInput onChangeText={setNewTask} placeholderTextColor='#555' placeholder="Tarefas" style={styles.fields} />
+            <TextInput onChangeText={setNewTask} placeholderTextColor='#555' placeholder="Tarefas" style={styles.fields} value={newTask} />
             <TouchableOpacity onPress={adcTarefa} activeOpacity={0.7} style={styles.button}>
-                <Text style={styles.buttonText}>Adicionar</Text>
+                <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
-
             <Text style={styles.title}>Lista de tarefas</Text>
 
             {/*Scrollbar*/}
@@ -37,13 +51,13 @@ export const Home = () => {
                         <Text style={styles.buttonText}>{tarefa.title}</Text>
                     </TouchableOpacity>
                 ))}
-            </ScrollView>*/}
-            
-            <FlatList 
+                </ScrollView>*/}
+
+            <FlatList
                 data={tarefas}
                 keyExtractor={(item: Tarefa) => item.id}
                 renderItem={({item} : {item: Tarefa}) => (
-                    <TouchableOpacity>
+                    <TouchableOpacity style={styles.renderList} onPress={() => removerTarefa(item.id)}>
                         <Text style={styles.buttonText}>{item.title}</Text>
                     </TouchableOpacity>
                 )}
@@ -77,7 +91,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        backgroundColor: 'rgb(192, 192, 192)',
+        backgroundColor: '#4b642a',
         padding: 15,
         borderRadius: 7,
         alignItems: 'center',
@@ -87,6 +101,13 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 15,
+    },
+    renderList: {
+        backgroundColor: '#253b15',
+        padding: 10,
+        marginTop: 10,
+        borderRadius: 50,
+        alignItems: 'center',
     }
   });
   
